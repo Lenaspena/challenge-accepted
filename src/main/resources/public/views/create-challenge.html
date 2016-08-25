@@ -1,0 +1,20 @@
+<div class="col-sm-6 col-sm-offset-3">
+    <div class="list">
+        <h1>Create new challenge</h1>
+        <div class="container-fluid">
+            <form class="form-horizontal" role="form" id="form-create-new-challenge" name="formCreateNewChallenge" ng-validate="validationOptions" ng-submit="createNewChallenge(formCreateNewChallenge)">
+                <div class="form-group">
+                    <input class="form-control" id="input-topic" name="inputTopic" type="text" placeholder="Enter topic">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" id="input-description" name="inputDescription" placeholder="Description" rows="5"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" id="btn-create-challenge" class="btn btn-default">
+                        Create Challenge
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

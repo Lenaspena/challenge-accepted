@@ -1,0 +1,168 @@
+/*Elements*/
+
+a {
+    cursor: pointer;
+}
+
+body {
+    background-color: #f0f0f0;
+    background-size: 100%;
+}
+
+h1 {
+    color: #003366;
+    text-align: center;
+}
+
+table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+th {
+    text-align: center;
+}
+
+/*Classes*/
+
+.th-list-users {
+    text-align: left;
+}
+
+.table-item-description, .table-item-topic, .table-item-date {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.table-item-thumb-th {
+    width: 5%;
+}
+
+.table-item-upvotes-th {
+    width: 15%;
+}
+
+.table-item-thumb, .table-item-upvotes, .table-item-date {
+    text-align: center;
+}
+
+.btn-default {
+    color: #003366;
+    padding: 0.5em;
+    display: inline-block;
+}
+
+.unable-to-claim {
+    background-color: #F8F8F8;
+    border-radius: 20px;
+    padding: 1em;
+}
+
+.navbar {
+    background-color: #F8F8F8;
+    opacity: 0.9;
+    padding: 0.6em;
+    z-index: 1;
+}
+
+.navbar-default .navbar-nav .menu-item, .navbar-default .navbar-nav .menu-item-right {
+    font-size: 1.2em;
+    color: #003366;
+    font-weight: bold;
+    margin-top: 3em;
+}
+
+.navbar-default .navbar-nav .menu-item:hover {
+    font-size: 1.2em;
+    color: #337AB7;
+    font-weight: bold;
+}
+
+.list {
+    background-color: #F8F8F8;
+    border-radius: 20px;
+    padding: 1em;
+    word-wrap: break-word;
+}
+
+.social-share {
+    width: 1.3em;
+    height: 1.3em;
+}
+
+.fb-share {
+    float: right;
+}
+
+.thumb {
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+    background-color: #F8F8F8;
+}
+
+/*ID*/
+
+#logo {
+    width: 100%;
+    z-index: 2;
+}
+
+#name-of-logged-in-user {
+    font-weight: bold;
+    color: #003366;
+}
+
+#button-reset {
+    background-color: #F0F0F0;
+    border: 0;
+    height: 34px;
+    padding: 0;
+}
+
+#login-logout {
+    padding-left: 4em;
+}
+
+/* Overriding default values of Bootstraps Navbar */
+
+@media (max-width: 1080px) {
+  .navbar-header {
+      float: none;
+  }
+  .navbar-left,.navbar-right {
+      float: none !important;
+  }
+  .navbar-toggle {
+      display: block;
+  }
+  .navbar-collapse {
+      text-align: right;
+      border-top: 1px solid transparent;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  .navbar-fixed-top {
+      top: 0;
+      border-width: 0 0 1px;
+  }
+  .navbar-collapse.collapse {
+      display: none!important;
+  }
+  .navbar-nav {
+      float: none!important;
+      margin-top: 7.5px;
+  }
+  .navbar-nav>li {
+      float: none;
+  }
+  .navbar-nav>li>a {
+      padding-top: 10px;
+      padding-bottom: 10px;
+  }
+  .collapse.in{
+      display:block !important;
+  }
+}

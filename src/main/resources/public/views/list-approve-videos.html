@@ -1,0 +1,35 @@
+<div class="directive-search-challenges"></div>
+<div class="table-responsive list">
+    <h1>Videos to approve</h1>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Topic</th>
+            <th>Video</th>
+            <th>Performed by</th>
+            <th>Approve / Disapprove</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="challenge in listOfUnapprovedChallenges | filter:searchChallenges" ng-if="isLoggedInUserTheChallengeCreator(challenge)" ng-hide="challenge.challengeCompleted">
+            <td><a href="" ng-click="viewChallengeProfilePage(challenge)">{{challenge.topic}}</a></td>
+            <td>
+                <a href="" ng-click="viewChallengeProfilePage(challenge)"><img  height="150" width="200" src="http://img.youtube.com/vi/{{getYoutubeUrlId(challenge.youtubeURL)}}/0.jpg"></a>
+            </td>
+            <td><a ng-click="viewUserProfilePage(challenge.challengeClaimer)">{{challenge.challengeClaimer.firstName}} {{challenge.challengeClaimer.lastName}}</a></td>
+            <td>
+                <a href="">
+                    <button ng-click="completeChallenge(challenge)" class="btn btn-success">APPROVE</button>
+                    <button ng-click="showSubmitReasonButton = 'true'" class="btn btn-danger">DISAPPROVE</button>
+                </a>
+            </td>
+            <td ng-show="challenge.challengeDisapproved || showSubmitReasonButton === 'true'">
+                <form class="form-horizontal" role="form">
+                      <textarea rows="2" cols="30" id="disapprove-commentfield" placeholder="Please submit a reason for your disapproval"></textarea>
+                </form>
+                       <button ng-click="disapproveChallenge(challenge)" class="btn btn-primary">Submit Reason</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

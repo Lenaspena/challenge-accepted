@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ChallengeAccepted">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!--jQuery, Angular and Bootstrap Basic Scripts-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://code.angularjs.org/1.5.5/angular.js"></script>
+    <!--Change to this script when deployed.-->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <!--Angular Route-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.js"></script>
+
+    <!--jQuery-Confirm Plugin-->
+    <script src="js/jquery-confirm.min.js"></script>
+    <link rel="stylesheet" href="js/jquery-confirm.min.css">
+
+    <!--jQuery Validation Plugin-->
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.min.js"></script>
+    <script src="js/angular-validate.min.js"></script>
+
+    <!--Module-->
+    <script src="app/app.js"></script>
+
+    <!--Controller-->
+    <script src="app/controllers/challenge-profile-controller.js"></script>
+    <script src="app/controllers/user-controller.js"></script>
+    <script src="app/controllers/login-controller.js"></script>
+    <script src="app/controllers/create-challenge-controller.js"></script>
+    <script src="app/controllers/list-controller.js"></script>
+    <script src="app/controllers/approve-video-controller.js"></script>
+    <script src="app/controllers/notifications-controller.js"></script>
+
+    <!--Services-->
+    <script src="app/services/challenge-service.js"></script>
+    <script src="app/services/scope-service.js"></script>
+    <script src="app/services/user-service.js"></script>
+    <script src="app/services/notification-service.js"></script>
+
+    <!--Directives-->
+    <script src="app/directives/challenge-directive.js"></script>
+    <script src="app/directives/menu-directive.js"></script>
+    <script src="app/directives/user-directive.js"></script>
+    <script src="app/directives/notification-directive.js"></script>
+
+    <meta name="google-signin-client_id"
+          content="483335808440-pn6cvg2jf3iseqmna3rj4883bhkg5lvo.apps.googleusercontent.com">
+    <meta charset="UTF-8">
+    <title>Challenge Accepted</title>
+</head>
+<body>
+
+<section class="directive-menu" ng-controller="LoginController"></section>
+
+<div class="container" ng-view></div>
+
+</body>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+</html>

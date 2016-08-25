@@ -1,0 +1,68 @@
+<nav class="navbar navbar-default">
+    <div class="container">
+        <a href="#/home" class="navbar-brand"><img src="img/calogo.jpg" alt="" id="logo"></a>
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#ca-navbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="ca-navbar">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a class="dropdown-toggle menu-item" data-toggle="dropdown" href="">Challenge
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a ng-click="showCreateChallenge()">Create</a></li>
+                        <li><a href="#/available-challenges">Available</a></li>
+                        <li ng-show="loggedInUser != null"><a href="#/claimed-challenges">Claimed</a></li>
+                        <li><a href="#/completed-challenges">Completed</a></li>
+                    </ul>
+                </li>
+                <li ng-show="loggedInUser != null"><a href="#/approve-video" class="menu-item">Approve
+                    Videos</a></li>
+                <li ng-show="loggedInUser != null">
+                    <a href="#/notifications" class="menu-item">Notifications</a>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle menu-item" data-toggle="dropdown" href="">Hall of Fame
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#/toplist">Top Challengers</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <!--<li><a href="mailto:?subject={{mailtoSubject}}&body={{mailtoBody}}" class="menu-item-right"><img
+                        src="img/mail-logo-light.png"
+                        onmouseover="src='img/mail-logo-dark.png'"
+                        onmouseout="src='img/mail-logo-light.png'"
+                        class="social-share"></a></li>
+                <li>&lt;!&ndash;<a href="https://twitter.com/intent/tweet">&ndash;&gt;
+                    <a href="http://twitter.com/share?url={{ absoluteUrl }}" class="menu-item-right"><img
+                            src="img/twitter-logo-light.png"
+                            onmouseover="src='img/twitter-logo-dark.png'"
+                            onmouseout="src='img/twitter-logo-light.png'"
+                            class="social-share"></a></li>-->
+                <li id="login-logout">
+                    <div class="dropdown menu-item-right">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-login-logout"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
+                                ng-hide="loggedInUser == null">
+                            {{loggedInUser.firstName}}
+                            {{loggedInUser.lastName}}
+                        </button>
+                        <div ng-show="loggedInUser == null" class="g-signin2" data-onsuccess="onSignIn"></div>
+                        <ul class="dropdown-menu" aria-labelledby="dropdown-login-logout">
+                            <li ng-hide="loggedInUser == null"><a ng-click="viewUserProfilePage(loggedInUser)">View
+                                Profile</a></li>
+                            <li ng-hide="loggedInUser == null"><a href="" ng-click="signOut()">Sign out</a></li>
+                        </ul>
+                    </div>
+            </ul>
+        </div>
+    </div>
+</nav>
+<script src="https://apis.google.com/js/platform.js" async defer></script>

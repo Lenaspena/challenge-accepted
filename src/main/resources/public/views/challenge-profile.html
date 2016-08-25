@@ -1,0 +1,83 @@
+<div class="container">
+    <div class="panel panel-default list">
+        <div class="panel-heading">
+            <div>
+                <a href="http://www.facebook.com/sharer/sharer.php?u={{websiteUrl}}/" target="_blank"
+                   class="fb-share"><img
+                        src="img/facebook-logo-light.png"
+                        onmouseover="src='img/facebook-logo-dark.png'"
+                        onmouseout="src='img/facebook-logo-light.png'"
+                        class="social-share"></a>
+                <a href="http://twitter.com/share?url={{websiteUrl}}" target="_blank"
+                   class="fb-share"><img
+                        src="img/twitter-logo-light.png"
+                        onmouseover="src='img/twitter-logo-dark.png'"
+                        onmouseout="src='img/twitter-logo-light.png'"
+                        class="social-share"></a>
+                <h2>{{activeChallenge.topic}}</h2>
+            </div>
+            <p>
+                <small>Created {{activeChallenge.creationDate | date }} by <a
+                        ng-click="viewUserProfilePage(activeChallenge.challengeCreator)">{{
+                    activeChallenge.challengeCreator.firstName }}</a></small>
+            </p>
+
+            <p ng-if="activeChallenge.challengeCompleted == true">
+                <small>Completed by <a ng-click="viewUserProfilePage(activeChallenge.challengeClaimer)">
+                    {{activeChallenge.challengeClaimer.firstName}}</a></small>
+            </p>
+
+        </div>
+        <div class="panel-body">
+            <h4>{{activeChallenge.description}}</h4>
+
+            <div class="row">
+                <div class="col-sm-10">
+                    <button type="button"
+                            class="btn btn-primary"
+                            ng-hide="activeChallenge.challengeClaimed || activeChallenge.challengeCompleted"
+                            ng-click="claimCurrentChallenge(activeChallenge)"
+                            ng-disabled="isLoggedInUserTheChallengeCreator(activeChallenge)">
+                        Claim This Challenge
+                    </button>
+                </div>
+            </div>
+
+            <div ng-hide="activeChallenge.challengeCompleted || activeChallenge.youtubeVideoUploaded">
+                <form class="form-horizontal" role="form" ng-show="activeChallenge.challengeClaimed"
+                      id="uploadYoutubeVideoForm">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <input id="input-youtube-url" type="text" placeholder="Youtube URL here"
+                                   class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <button class="btn btn-default" ng-click="addYoutubeUrlToCurrentChallenge(activeChallenge)">
+                                Add URL
+                            </button>
+                        </div>
+                        <div class="col-sm-1">
+                            <button class="btn btn-default"
+                                    ng-click="confirmYoutubeVideoToCurrentChallenge(activeChallenge)"
+                                    ng-show="activeChallenge.youtubeUrlProvided">Confirm This Video
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <p>
+                <iframe id="youtubeFrame" width="510" height="350"
+                        allowfullscreen="true"
+                        ng-src="{{ markUrlAsTrusted(activeChallenge.youtubeURL) }}"
+                        ng-show="activeChallenge.youtubeUrlProvided || activeChallenge.challengeCompleted || activeChallenge.youtubeVideoUploaded">
+                </iframe>
+            <p>
+        </div>
+    </div>
+    <div class="panel panel-default unable-to-claim" ng-if="isLoggedInUserTheChallengeCreator(activeChallenge)">
+        <div class="panel-body">You created this challenge. You cannot claim it.</div>
+    </div>
+</div>

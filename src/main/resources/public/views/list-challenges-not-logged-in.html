@@ -1,0 +1,87 @@
+<div class="directive-search-challenges"></div>
+
+<div class="col-sm-6 ">
+    <div class="table-responsive list">
+        <h1>Available challenges</h1>
+
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-completed-home"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Sort by <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdown-completed-home">
+                <li><a href="" ng-click="orderByFieldAvailable = 'creationDate'; reverseSortAvailable = !reverseSortAvailable">Date of creation</a>
+                </li>
+                <li><a href="" ng-click="orderByFieldAvailable = 'upvotes'; reverseSortAvailable = !reverseSortAvailable">Upvotes</a></li>
+            </ul>
+
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Topic</th>
+                <th>Description</th>
+                <th>Date of creation</th>
+                <th class="table-item-thumb-th"></th>
+                <th class="table-item-upvotes-th">Upvotes</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="challenge in listOfChallenges | filter:searchChallenges | orderBy:orderByFieldAvailable:reverseSortAvailable"
+                ng-hide="challenge.challengeClaimed">
+                <td class="table-item-topic"><a ng-click="viewChallengeProfilePage(challenge)">{{challenge.topic}}</a></td>
+                <td class="table-item-description">{{challenge.description}}</td>
+                <td class="table-item-date">{{challenge.creationDate}}</td>
+                <td class="table-item-thumb"><a href="" ng-click="upvoteChallenge(challenge)">
+                    <img src="img/like.png" class="thumb" onmouseover="src='img/like2.png'"
+                         onmouseout="src='img/like.png'" ng-show="!isChallengeUpvotedByUser(challenge)">
+                    <img src="img/like2.png" class="thumb" onmouseover="src='img/like.png'"
+                         onmouseout="src='img/like2.png'" ng-show="isChallengeUpvotedByUser(challenge)"></a></td>
+                <td class="table-item-upvotes">{{challenge.upvotes}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<div class="col-sm-6">
+    <div class="table-responsive list">
+        <h1>Completed challenges</h1>
+
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-available-home"
+                    data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="true">Sort by <span class="caret"></span></button>
+            <ul class="dropdown-menu" aria-labelledby="dropdown-available-home">
+                <li><a href="" ng-click="orderByFieldCompleted = 'creationDate'; reverseSortCompleted = !reverseSortCompleted">Date of creation</a>
+                </li>
+                <li><a href="" ng-click="orderByFieldCompleted = 'upvotes'; reverseSortCompleted = !reverseSortCompleted">Upvotes</a></li>
+            </ul>
+        </div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Topic</th>
+                <th>Description</th>
+                <th>Date of creation</th>
+                <th class="table-item-thumb-th"></th>
+                <th class="table-item-upvotes-th"> Upvotes</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="challenge in listOfCompletedChallenges | filter:searchChallenges | orderBy:orderByFieldCompleted:reverseSortCompleted">
+                <td class="table-item-topic"><a href="" ng-click="viewChallengeProfilePage(challenge)">{{challenge.topic}}</a></td>
+                <td class="table-item-description">{{challenge.description}}</td>
+                <td class="table-item-date">{{challenge.creationDate}}</td>
+                <td class="table-item-thumb"><a href="" ng-click="addPointToChallenge(challenge)">
+                    <img src="img/like.png" class="thumb" onmouseover="src='img/like2.png'"
+                         onmouseout="src='img/like.png'" ng-show="!isChallengeUpvotedByUser(challenge)">
+                    <img src="img/like2.png" class="thumb" onmouseover="src='img/like.png'"
+                         onmouseout="src='img/like2.png'" ng-show="isChallengeUpvotedByUser(challenge)"></a></td>
+                <td class="table-item-upvotes">{{challenge.points}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

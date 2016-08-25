@@ -1,0 +1,55 @@
+<div class="container">
+    <div class="panel panel-default list">
+        <div class="panel-heading">
+            <div>
+                <a href="http://www.facebook.com/sharer/sharer.php?u={{websiteUrl}}/" target="_blank"
+                   class="fb-share"><img
+                        src="img/facebook-logo-light.png"
+                        onmouseover="src='img/facebook-logo-dark.png'"
+                        onmouseout="src='img/facebook-logo-light.png'"
+                        class="social-share"></a>
+                <a href="http://twitter.com/share?url={{websiteUrl}}" target="_blank"
+                   class="fb-share"><img
+                        src="img/twitter-logo-light.png"
+                        onmouseover="src='img/twitter-logo-dark.png'"
+                        onmouseout="src='img/twitter-logo-light.png'"
+                        class="social-share"></a>
+                <h2>{{activeUser.firstName}} {{activeUser.lastName}}
+                    <small>{{activeUser.createdChallengePoints + activeUser.completedChallengePoints}} points in total
+                    </small>
+
+                </h2>
+            </div>
+
+
+        </div>
+        <div class="panel-body">
+            <h4>Challenges created by {{activeUser.firstName}}
+                <small> {{activeUser.createdChallengePoints}} points as
+                    creator
+                </small>
+            </h4>
+
+            <div ng-repeat="challenge in listOfChallenges">
+                <p ng-if="challenge.challengeCreator.id == activeUser.id"><a
+                        ng-click="viewChallengeProfilePage(challenge)">{{challenge.topic}}</a></p>
+            </div>
+            <hr>
+            <h4>Challenges completed by {{activeUser.firstName}}
+                <small>{{activeUser.completedChallengePoints}} points as
+                    completer
+                </small>
+            </h4>
+
+            <div ng-repeat="challenge in listOfCompletedChallenges">
+                <p ng-if="challenge.challengeClaimer.id == activeUser.id"><a
+                        ng-click="viewChallengeProfilePage(challenge)">{{challenge.topic}}</a></p>
+            </div>
+            <!--<h2>Number of created challenges</h2>
+            <h2>Number of done challenges</h2>
+            <h2>Points for created challenges</h2>
+            <h2>Points for done challenges</h2>
+            <h2>Ranking in Hall of Fame</h2>-->
+        </div>
+    </div>
+</div>
