@@ -1,6 +1,6 @@
 app.factory('userService', function ($http) {
 
-    var baseUrl = "https://afternoon-atoll-64085.herokuapp.com/api/";
+    var baseUrl = "https://localhost:63342/challengeaccepted/api/";
 
     return {
         createNewUser: function (data) {

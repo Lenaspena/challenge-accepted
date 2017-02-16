@@ -1,7 +1,5 @@
 package com.challengeaccepted.services;
 
-import com.challengeaccepted.loggers.HerokuLogger;
-import com.challengeaccepted.loggers.HerokuLoggerException;
 import com.challengeaccepted.models.UserModel;
 import com.challengeaccepted.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +29,7 @@ public class UserService {
         return (ArrayList<UserModel>) userRepository.findAll();
     }
 
-    public UserModel getUserByEmailFromDatabase(String email) throws HerokuLoggerException {
-        new HerokuLogger().writeToInfoLog("Total number of users: " + userRepository.findAll().size());
+    public UserModel getUserByEmailFromDatabase(String email) {
         return userRepository.findByEmail(email);
     }
 

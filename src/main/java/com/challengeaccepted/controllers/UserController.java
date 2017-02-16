@@ -1,7 +1,5 @@
 package com.challengeaccepted.controllers;
 
-import com.challengeaccepted.loggers.HerokuLogger;
-import com.challengeaccepted.loggers.HerokuLoggerException;
 import com.challengeaccepted.models.UserModel;
 import com.challengeaccepted.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +17,8 @@ public class UserController {
 
     @CrossOrigin
     @RequestMapping(value = "/user/", method = RequestMethod.POST)
-    public ResponseEntity<UserModel> createUser(@RequestBody UserModel userModel) throws HerokuLoggerException {
+    public ResponseEntity<UserModel> createUser(@RequestBody UserModel userModel) {
         userService.saveUserToDatabase(userModel);
-        new HerokuLogger().writeToInfoLog("A new user named " + userModel.getFirstName() + " " + userModel.getLastName() + " has been saved to the database");
         return new ResponseEntity<UserModel>(userModel, HttpStatus.CREATED);
     }
 
@@ -52,7 +49,7 @@ public class UserController {
 
     @CrossOrigin
     @RequestMapping(value = "/user/find-by-email", method = RequestMethod.GET)
-    public ResponseEntity<UserModel> readUserByEmail(String email) throws HerokuLoggerException {
+    public ResponseEntity<UserModel> readUserByEmail(String email) {
         return new ResponseEntity<UserModel>(userService.getUserByEmailFromDatabase(email), HttpStatus.OK);
     }
 
