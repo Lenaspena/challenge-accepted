@@ -12,14 +12,18 @@ import java.util.ArrayList;
 @RestController
 public class UserController {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @CrossOrigin
     @RequestMapping(value = "/user/", method = RequestMethod.POST)
     public ResponseEntity<UserModel> createUser(@RequestBody UserModel userModel) {
         userService.saveUserToDatabase(userModel);
-        return new ResponseEntity<UserModel>(userModel, HttpStatus.CREATED);
+        return new ResponseEntity<>(userModel, HttpStatus.CREATED);
     }
 
     @CrossOrigin
@@ -28,22 +32,22 @@ public class UserController {
         UserModel user = userService.getUserFromDatabase(id);
 
         if (user != null) {
-            return new ResponseEntity<UserModel>(user, HttpStatus.OK);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
-            return new ResponseEntity<UserModel>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin
     @RequestMapping(value = "/users/", method = RequestMethod.GET)
     public ResponseEntity<ArrayList<UserModel>> readAllUsers() {
-        return new ResponseEntity<ArrayList<UserModel>>(userService.getAllUsersFromDatabase(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAllUsersFromDatabase(), HttpStatus.OK);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/user/find-by-email", method = RequestMethod.GET)
     public ResponseEntity<UserModel> readUserByEmail(String email) {
-        return new ResponseEntity<UserModel>(userService.getUserByEmailFromDatabase(email), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserByEmailFromDatabase(email), HttpStatus.OK);
     }
 
 }

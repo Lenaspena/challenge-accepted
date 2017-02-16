@@ -1,15 +1,12 @@
 package com.challengeaccepted.controllers;
 
 import com.challengeaccepted.models.NotificationModel;
-import com.challengeaccepted.models.UserModel;
 import com.challengeaccepted.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,13 +14,17 @@ import java.util.Set;
 @RestController
 public class NotificationController {
 
+    private final NotificationService notificationService;
+
     @Autowired
-    private NotificationService notificationService;
+    public NotificationController(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
 
     @CrossOrigin
     @RequestMapping(value = "/notifications/", method = RequestMethod.GET)
     public ResponseEntity<List<NotificationModel>> readAllNotifications() {
-        return new ResponseEntity<List<NotificationModel>>(notificationService.getAllNotificationsFromDatabase(), HttpStatus.OK);
+        return new ResponseEntity<>(notificationService.getAllNotificationsFromDatabase(), HttpStatus.OK);
     }
 
     @CrossOrigin
@@ -40,17 +41,17 @@ public class NotificationController {
     @CrossOrigin
     @RequestMapping(value = "/user/{id}/notifications/", method = RequestMethod.GET)
     public ResponseEntity<List<NotificationModel>> readPersonalNotifications(@PathVariable Long id){
-        List<NotificationModel> notifications = new ArrayList<NotificationModel>();
+        List<NotificationModel> notifications;
 
         notifications = notificationService.getAllNotificationsFromChallengeCreator(id);
         notifications.addAll(notificationService.getAllNotificationsFromChallengeClaimer(id));
         notifications.addAll(notificationService.getAllNotificationsFromChallengeUpvotersId(id));
         notifications = removeDuplicateEntriesFromList(notifications);
 
-        return new ResponseEntity<List<NotificationModel>>(notifications, HttpStatus.OK);
+        return new ResponseEntity<>(notifications, HttpStatus.OK);
     }
 
-    private List<NotificationModel> removeDuplicateEntriesFromList(List notifications){
+    private List<NotificationModel> removeDuplicateEntriesFromList(List<NotificationModel> notifications){
 
         Set<NotificationModel> notificationSet = new HashSet<>();
         notificationSet.addAll(notifications);
