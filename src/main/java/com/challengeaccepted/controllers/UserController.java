@@ -35,13 +35,6 @@ public class UserController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/user/", method = RequestMethod.PUT)
-    public ResponseEntity updateUser(@RequestBody UserModel userModel) {
-        userService.updateUserInDatabase(userModel);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @CrossOrigin
     @RequestMapping(value = "/users/", method = RequestMethod.GET)
     public ResponseEntity<ArrayList<UserModel>> readAllUsers() {
         return new ResponseEntity<ArrayList<UserModel>>(userService.getAllUsersFromDatabase(), HttpStatus.OK);

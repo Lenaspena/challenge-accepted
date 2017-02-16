@@ -28,14 +28,6 @@ app.factory('userService', function ($http) {
             })
         },
 
-        updateUser: function (data, id) {
-            return $http({
-                url: baseUrl + 'user/' + id,
-                method: 'PUT',
-                header: {'Content-Type': 'application/json'}
-            })
-        },
-
         getListOfAllUsers: function () {
             return $http({
                 url: baseUrl + 'users/',
