@@ -9,7 +9,6 @@
 - Users can now upvote completed challenges
 - Name of logged in user is shown
 - Feedback when providing a video of challenge performed
-- Users receive notifications about interacted challenges
 - High Score
 - Sort challenges
 

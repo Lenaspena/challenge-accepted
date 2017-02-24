@@ -30,11 +30,6 @@ app.config(function ($routeProvider) {
             templateUrl: 'views/list-approve-videos.html',
             controller: 'ApproveVideoController'
         })
-        .when('/notifications', {
-            title: 'Notifications',
-            templateUrl: 'views/notifications.html',
-            controller: 'NotificationsController'
-        })
         .when('/challenge-profile/:id', {
             title: 'Challenge profile',
             templateUrl: 'views/challenge-profile.html',

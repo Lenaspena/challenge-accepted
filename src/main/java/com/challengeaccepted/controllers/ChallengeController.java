@@ -1,10 +1,7 @@
 package com.challengeaccepted.controllers;
 
 import com.challengeaccepted.models.Challenge;
-import com.challengeaccepted.models.Notification;
 import com.challengeaccepted.models.User;
-import com.challengeaccepted.models.enums.Action;
-import com.challengeaccepted.models.wrappers.NotificationInfo;
 import com.challengeaccepted.services.ChallengeService;
 import com.challengeaccepted.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +17,11 @@ public class ChallengeController {
 
     private final ChallengeService challengeService;
     private final UserService userService;
-    private final NotificationController notificationController;
 
     @Autowired
-    public ChallengeController(ChallengeService challengeService, UserService userService, NotificationController notificationController) {
+    public ChallengeController(ChallengeService challengeService, UserService userService) {
         this.challengeService = challengeService;
         this.userService = userService;
-        this.notificationController = notificationController;
     }
 
     @CrossOrigin
@@ -41,7 +36,6 @@ public class ChallengeController {
         challenge.setChallengeCreator(challengeCreator);
 
         challengeService.saveChallengeToDatabase(challenge);
-        createAndSaveNotification(challengeCreator, challenge, new NotificationInfo(Action.CREATECHALLENGE));
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
@@ -137,7 +131,6 @@ public class ChallengeController {
         challenge.setChallengeClaimer(user);
         challenge.setChallengeClaimed(true);
         challengeService.updateChallengeInDatabase(challenge);
-        createAndSaveNotification(user, challenge, new NotificationInfo(Action.CLAIMCHALLENGE));
         return new ResponseEntity<>(challenge, HttpStatus.OK);
     }
 
@@ -172,15 +165,12 @@ public class ChallengeController {
         userService.updateUserInDatabase(challengeCreator);
         challengeService.updateChallengeInDatabase(challenge);
 
-
-        createAndSaveNotification(challengeCompleter, challenge, new NotificationInfo(Action.PERFORMEDCHALLENGE));
-
         return new ResponseEntity<>(challenge, HttpStatus.OK);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/challenge/{id}/disapprove-challenge/", method = RequestMethod.PUT)
-    public ResponseEntity<Challenge> disapproveChallenge(@PathVariable Long id, @RequestBody String notificationMessage) {
+    public ResponseEntity<Challenge> disapproveChallenge(@PathVariable Long id) {
         Challenge challenge = challengeService.getChallengeFromDatabase(id);
         User userThatHasFailedPerformedChallenge = challenge.getChallengeClaimer();
 
@@ -192,9 +182,6 @@ public class ChallengeController {
         challenge.setChallengeDisapproved(true);
 
         challengeService.updateChallengeInDatabase(challenge);
-
-        NotificationInfo notificationInfo = new NotificationInfo(Action.FAILEDTOPERFORMECHALLENGE, notificationMessage);
-        createAndSaveNotification(userThatHasFailedPerformedChallenge, challenge, notificationInfo);
 
         return new ResponseEntity<>(challenge, HttpStatus.OK);
     }
@@ -226,8 +213,6 @@ public class ChallengeController {
         } else {
             challenge.addUpvotes(1.0);
             challenge.addUserModelToChallengeUpvoters(user);
-
-            createAndSaveNotification(user, challenge, new NotificationInfo(Action.UPVOTECHALLENGE));
         }
 
         challengeService.updateChallengeInDatabase(challenge);
@@ -289,11 +274,6 @@ public class ChallengeController {
 
         userService.updateUserInDatabase(challengeCompleter);
         userService.updateUserInDatabase(challengeCreator);
-    }
-
-    private void createAndSaveNotification(User user, Challenge challenge, NotificationInfo notificationInfo) {
-        Notification notification = new Notification(user, challenge, notificationInfo);
-        notificationController.createNotification(notification);
     }
 
 }
