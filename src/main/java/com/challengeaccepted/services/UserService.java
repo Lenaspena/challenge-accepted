@@ -1,6 +1,6 @@
 package com.challengeaccepted.services;
 
-import com.challengeaccepted.models.UserModel;
+import com.challengeaccepted.models.User;
 import com.challengeaccepted.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,23 +13,23 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void saveUserToDatabase(UserModel userModel) {
-        userRepository.saveAndFlush(userModel);
+    public void saveUserToDatabase(User user) {
+        userRepository.saveAndFlush(user);
     }
 
-    public UserModel getUserFromDatabase(Long id) {
+    public User getUserFromDatabase(Long id) {
         return userRepository.findOne(id);
     }
 
-    public void updateUserInDatabase(UserModel userModelFromWeb) {
-        userRepository.save(userModelFromWeb);
+    public void updateUserInDatabase(User userFromWeb) {
+        userRepository.save(userFromWeb);
     }
 
-    public ArrayList<UserModel> getAllUsersFromDatabase() {
-        return (ArrayList<UserModel>) userRepository.findAll();
+    public ArrayList<User> getAllUsersFromDatabase() {
+        return (ArrayList<User>) userRepository.findAll();
     }
 
-    public UserModel getUserByEmailFromDatabase(String email) {
+    public User getUserByEmailFromDatabase(String email) {
         return userRepository.findByEmail(email);
     }
 

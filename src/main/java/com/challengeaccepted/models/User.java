@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class UserModel implements Serializable {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,13 +17,13 @@ public class UserModel implements Serializable {
     private Double completedChallengePoints;
     private Double createdChallengePoints;
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "challengeUpvoters")
-    private List<ChallengeModel> upvotedChallenges;
+    private List<Challenge> upvotedChallenges;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "challengeClaimer")
-    private List<ChallengeModel> claimedChallenges;
+    private List<Challenge> claimedChallenges;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "challengeCreator")
-    private List<ChallengeModel> createdChallenge;
+    private List<Challenge> createdChallenge;
 
-    public UserModel() {
+    public User() {
     }
 
     public Double getCompletedChallengePoints() {
@@ -66,6 +66,10 @@ public class UserModel implements Serializable {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {

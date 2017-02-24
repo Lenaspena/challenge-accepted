@@ -10,23 +10,23 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notifications")
-public class NotificationModel implements Serializable {
+public class Notification implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private LocalDateTime dateTimeOfNotification;
     @ManyToOne
-    private UserModel interactor;
+    private User interactor;
     @ManyToOne
-    private ChallengeModel interactedChallenge;
+    private Challenge interactedChallenge;
     @Embedded
     private NotificationInfo notificationInfo;
 
-    public NotificationModel() {
+    public Notification() {
     }
 
-    public NotificationModel(UserModel interactor, ChallengeModel interactedChallenge, NotificationInfo notificationInfo) {
+    public Notification(User interactor, Challenge interactedChallenge, NotificationInfo notificationInfo) {
         this.interactor = interactor;
         this.interactedChallenge = interactedChallenge;
         this.notificationInfo = notificationInfo;
@@ -46,19 +46,19 @@ public class NotificationModel implements Serializable {
         this.dateTimeOfNotification = dateTimeOfNotification;
     }
 
-    public UserModel getInteractor() {
+    public User getInteractor() {
         return interactor;
     }
 
-    public void setInteractor(UserModel interactor) {
+    public void setInteractor(User interactor) {
         this.interactor = interactor;
     }
 
-    public ChallengeModel getInteractedChallenge() {
+    public Challenge getInteractedChallenge() {
         return interactedChallenge;
     }
 
-    public void setInteractedChallenge(ChallengeModel interactedChallenge) {
+    public void setInteractedChallenge(Challenge interactedChallenge) {
         this.interactedChallenge = interactedChallenge;
     }
 

@@ -1,7 +1,7 @@
 package com.challengeaccepted.controllers;
 
-import com.challengeaccepted.models.ChallengeModel;
-import com.challengeaccepted.models.UserModel;
+import com.challengeaccepted.models.Challenge;
+import com.challengeaccepted.models.User;
 import com.challengeaccepted.services.ChallengeService;
 import com.challengeaccepted.services.UserService;
 import org.junit.Before;
@@ -12,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
@@ -27,15 +26,15 @@ public class ChallengeControllerTest {
     @Mock
     private NotificationController mockedNotificationController;
     @Mock
-    private ChallengeModel mockedChallenge;
+    private Challenge mockedChallenge;
     @Mock
-    private UserModel mockedUserModel;
+    private User mockedUser;
     @Mock
-    private UserModel nullMockedUserModel = null;
+    private User nullMockedUser = null;
     @Mock
     private ArrayList<Long> mockedUserModelList;
     @Mock
-    private UserModel mockedChallengeCreator;
+    private User mockedChallengeCreator;
 
     @InjectMocks
     private ChallengeController challengeController;
@@ -44,10 +43,10 @@ public class ChallengeControllerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(mockedChallengeService.getChallengeFromDatabase(1L)).thenReturn(mockedChallenge);
-        when(mockedUserService.getUserFromDatabase(1L)).thenReturn(mockedUserModel);
+        when(mockedUserService.getUserFromDatabase(1L)).thenReturn(mockedUser);
         when(mockedChallenge.getChallengeUpvoters()).thenReturn(mockedUserModelList);
-        when(mockedUserService.getUserFromDatabase(mockedUserModel.getId())).thenReturn(mockedUserModel);
-        when(mockedChallenge.getChallengeClaimer()).thenReturn(mockedUserModel);
+        when(mockedUserService.getUserFromDatabase(mockedUser.getId())).thenReturn(mockedUser);
+        when(mockedChallenge.getChallengeClaimer()).thenReturn(mockedUser);
         when(mockedChallenge.getChallengeCreator()).thenReturn(mockedChallengeCreator);
     }
 
@@ -63,18 +62,18 @@ public class ChallengeControllerTest {
 
     @Test
     public void testReadChallenge_Should_Return_Status_Code_200() throws Exception {
-        assertEquals("readChallenge() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.readChallenge(1L, mockedUserModel.getId()).getStatusCode());
+        assertEquals("readChallenge() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.readChallenge(1L, mockedUser.getId()).getStatusCode());
         when(mockedChallenge.getChallengeClaimed()).thenReturn(true);
     }
 
     @Test
     public void testReadChallenge_Should_Return_Status_Code_400() throws Exception {
-        when(mockedUserModel.getId()).thenReturn(1L);
-        when(mockedUserModel.getId()).thenReturn(2L);
+        when(mockedUser.getId()).thenReturn(1L);
+        when(mockedUser.getId()).thenReturn(2L);
         when(mockedChallenge.getChallengeCompleted()).thenReturn(false);
         when(mockedChallenge.getYoutubeVideoUploaded()).thenReturn(false);
         when(mockedChallenge.getChallengeClaimed()).thenReturn(true);
-        assertEquals("readChallenge() did not respond with http status 400 (bad request)", HttpStatus.BAD_REQUEST, challengeController.readChallenge(1L, mockedUserModel.getId()).getStatusCode());
+        assertEquals("readChallenge() did not respond with http status 400 (bad request)", HttpStatus.BAD_REQUEST, challengeController.readChallenge(1L, mockedUser.getId()).getStatusCode());
     }
 
     @Test
@@ -94,16 +93,16 @@ public class ChallengeControllerTest {
 
     @Test
     public void testUpdateChallenge_Should_Return_Status_Code_200() throws Exception {
-        assertEquals("updateChallenge() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.updateChallenge(new ChallengeModel()).getStatusCode());
+        assertEquals("updateChallenge() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.updateChallenge(new Challenge()).getStatusCode());
     }
 
     @Test
     public void testUpdateChallengeClaimer() throws Exception {
-        when(mockedUserModel.getId()).thenReturn(1L);
-        assertEquals("updateChallengeClaimer() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.updateChallengeClaimer(1L, mockedUserModel).getStatusCode());
+        when(mockedUser.getId()).thenReturn(1L);
+        assertEquals("updateChallengeClaimer() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.updateChallengeClaimer(1L, mockedUser).getStatusCode());
         // Set the two mocked users to the same id, should return a bad request http status.
         when(mockedChallenge.getChallengeCreator().getId()).thenReturn(1L);
-        assertEquals("updateChallengeClaimer() did not respond with http status 400 (bad request)", HttpStatus.BAD_REQUEST, challengeController.updateChallengeClaimer(1L, mockedUserModel).getStatusCode());
+        assertEquals("updateChallengeClaimer() did not respond with http status 400 (bad request)", HttpStatus.BAD_REQUEST, challengeController.updateChallengeClaimer(1L, mockedUser).getStatusCode());
     }
 
     @Test
@@ -113,7 +112,7 @@ public class ChallengeControllerTest {
 
     @Test
     public void testAssignPointsToUser_Should_Return_Status_Code_200() throws Exception {
-        when(mockedUserService.getUserFromDatabase(mockedChallenge.getChallengeCreator().getId())).thenReturn(mockedUserModel);
+        when(mockedUserService.getUserFromDatabase(mockedChallenge.getChallengeCreator().getId())).thenReturn(mockedUser);
         assertEquals("assignPoinstToUser() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.assignPointsToUser(1L).getStatusCode());
     }
 
@@ -131,17 +130,17 @@ public class ChallengeControllerTest {
 
     @Test
     public void testAddOrRemovePointToCompletedChallenge_Should_Return_Status_Code_200() throws Exception {
-        when(mockedUserService.getUserFromDatabase(mockedUserModel.getId())).thenReturn(mockedUserModel);
+        when(mockedUserService.getUserFromDatabase(mockedUser.getId())).thenReturn(mockedUser);
         when(mockedChallengeService.getChallengeFromDatabase(1L)).thenReturn(mockedChallenge);
-        assertEquals("addOrRemovePointToCompletedChallenge() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.addOrRemoveUserToChallengeUpvoters(1L, mockedUserModel).getStatusCode());
+        assertEquals("addOrRemovePointToCompletedChallenge() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.addOrRemoveUserToChallengeUpvoters(1L, mockedUser).getStatusCode());
     }
 
     @Test()
     public void testAddOrRemoveUserToChallengeUpvoters_Should_Return_Status_Code_200() throws Exception {
-        when(mockedUserModel.getId()).thenReturn(1L);
-        when(mockedUserService.getUserFromDatabase(1L)).thenReturn(new UserModel());
-        /*assertEquals("addUserToChallengeUpvoters() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.addOrRemoveUserToChallengeUpvoters(1L, mockedUserModel).getStatusCode());*/
-        assertEquals("addUserToChallengeUpvoters() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.addOrRemovePointToCompletedChallenge(1L, mockedUserModel).getStatusCode());
+        when(mockedUser.getId()).thenReturn(1L);
+        when(mockedUserService.getUserFromDatabase(1L)).thenReturn(new User());
+        /*assertEquals("addUserToChallengeUpvoters() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.addOrRemoveUserToChallengeUpvoters(1L, mockedUser).getStatusCode());*/
+        assertEquals("addUserToChallengeUpvoters() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.addOrRemovePointToCompletedChallenge(1L, mockedUser).getStatusCode());
     }
 
 }

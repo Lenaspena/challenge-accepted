@@ -1,6 +1,6 @@
 package com.challengeaccepted.services;
 
-import com.challengeaccepted.models.NotificationModel;
+import com.challengeaccepted.models.Notification;
 import com.challengeaccepted.repositories.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,23 +13,23 @@ public class NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    public void saveNotificationToDatabase(NotificationModel notificationModel) {
-        notificationRepository.saveAndFlush(notificationModel);
+    public void saveNotificationToDatabase(Notification notification) {
+        notificationRepository.saveAndFlush(notification);
     }
 
-    public List<NotificationModel> getAllNotificationsFromDatabase() {
+    public List<Notification> getAllNotificationsFromDatabase() {
         return notificationRepository.findAll();
     }
 
-    public List<NotificationModel> getAllNotificationsFromChallengeCreator(Long id) {
+    public List<Notification> getAllNotificationsFromChallengeCreator(Long id) {
         return notificationRepository.getByInteractedChallengeChallengeCreatorId(id);
     }
 
-    public List<NotificationModel> getAllNotificationsFromChallengeClaimer(Long id){
+    public List<Notification> getAllNotificationsFromChallengeClaimer(Long id){
         return notificationRepository.getByInteractedChallengeChallengeClaimerId(id);
     }
 
-    public List<NotificationModel> getAllNotificationsFromChallengeUpvotersId(Long id) {
+    public List<Notification> getAllNotificationsFromChallengeUpvotersId(Long id) {
         return notificationRepository.getByInteractedChallengeChallengeUpvotersId(id);
     }
 

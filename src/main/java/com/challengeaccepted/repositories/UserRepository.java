@@ -1,10 +1,10 @@
 package com.challengeaccepted.repositories;
 
-import com.challengeaccepted.models.UserModel;
+import com.challengeaccepted.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<UserModel, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    UserModel findByEmail(String email);
+    User findByEmail(String email);
 
 }

@@ -1,14 +1,14 @@
 package com.challengeaccepted.repositories;
 
-import com.challengeaccepted.models.ChallengeModel;
+import com.challengeaccepted.models.Challenge;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ChallengeRepository extends JpaRepository<ChallengeModel, Long> {
+public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 
-    List<ChallengeModel> getByIsChallengeCompleted(boolean isChallengeCompleted);
+    List<Challenge> getByIsChallengeCompleted();
 
-    List<ChallengeModel> getByIsYoutubeVideoUploaded(boolean isYoutubeVideoUploaded);
+    List<Challenge> getByIsYoutubeVideoUploaded();
 
 }

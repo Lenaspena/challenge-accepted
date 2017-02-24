@@ -1,18 +1,16 @@
 package com.challengeaccepted.repositories;
 
-import com.challengeaccepted.models.NotificationModel;
-import com.challengeaccepted.models.UserModel;
+import com.challengeaccepted.models.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public interface NotificationRepository extends JpaRepository<NotificationModel, Long> {
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    ArrayList<NotificationModel> getByInteractedChallengeChallengeCreatorId(Long id);
+    ArrayList<Notification> getByInteractedChallengeChallengeCreatorId(Long id);
 
-    ArrayList<NotificationModel> getByInteractedChallengeChallengeClaimerId(Long id);
+    ArrayList<Notification> getByInteractedChallengeChallengeClaimerId(Long id);
 
-    ArrayList<NotificationModel> getByInteractedChallengeChallengeUpvotersId(Long id);
+    ArrayList<Notification> getByInteractedChallengeChallengeUpvotersId(Long id);
 
 }

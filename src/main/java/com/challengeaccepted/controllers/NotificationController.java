@@ -1,6 +1,6 @@
 package com.challengeaccepted.controllers;
 
-import com.challengeaccepted.models.NotificationModel;
+import com.challengeaccepted.models.Notification;
 import com.challengeaccepted.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,15 +23,15 @@ public class NotificationController {
 
     @CrossOrigin
     @RequestMapping(value = "/notifications/", method = RequestMethod.GET)
-    public ResponseEntity<List<NotificationModel>> readAllNotifications() {
+    public ResponseEntity<List<Notification>> readAllNotifications() {
         return new ResponseEntity<>(notificationService.getAllNotificationsFromDatabase(), HttpStatus.OK);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/notification/", method = RequestMethod.POST)
-    public ResponseEntity createNotification(@RequestBody NotificationModel notificationModel) {
-        if (notificationModel != null) {
-            notificationService.saveNotificationToDatabase(notificationModel);
+    public ResponseEntity createNotification(@RequestBody Notification notification) {
+        if (notification != null) {
+            notificationService.saveNotificationToDatabase(notification);
             return new ResponseEntity(HttpStatus.CREATED);
         } else {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -40,8 +40,8 @@ public class NotificationController {
 
     @CrossOrigin
     @RequestMapping(value = "/user/{id}/notifications/", method = RequestMethod.GET)
-    public ResponseEntity<List<NotificationModel>> readPersonalNotifications(@PathVariable Long id){
-        List<NotificationModel> notifications;
+    public ResponseEntity<List<Notification>> readPersonalNotifications(@PathVariable Long id){
+        List<Notification> notifications;
 
         notifications = notificationService.getAllNotificationsFromChallengeCreator(id);
         notifications.addAll(notificationService.getAllNotificationsFromChallengeClaimer(id));
@@ -51,9 +51,9 @@ public class NotificationController {
         return new ResponseEntity<>(notifications, HttpStatus.OK);
     }
 
-    private List<NotificationModel> removeDuplicateEntriesFromList(List<NotificationModel> notifications){
+    private List<Notification> removeDuplicateEntriesFromList(List<Notification> notifications){
 
-        Set<NotificationModel> notificationSet = new HashSet<>();
+        Set<Notification> notificationSet = new HashSet<>();
         notificationSet.addAll(notifications);
         notifications.clear();
         notifications.addAll(notificationSet);

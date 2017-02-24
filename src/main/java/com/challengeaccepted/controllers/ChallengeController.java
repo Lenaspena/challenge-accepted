@@ -1,8 +1,8 @@
 package com.challengeaccepted.controllers;
 
-import com.challengeaccepted.models.ChallengeModel;
-import com.challengeaccepted.models.NotificationModel;
-import com.challengeaccepted.models.UserModel;
+import com.challengeaccepted.models.Challenge;
+import com.challengeaccepted.models.Notification;
+import com.challengeaccepted.models.User;
 import com.challengeaccepted.models.enums.Action;
 import com.challengeaccepted.models.wrappers.NotificationInfo;
 import com.challengeaccepted.services.ChallengeService;
@@ -31,46 +31,46 @@ public class ChallengeController {
 
     @CrossOrigin
     @RequestMapping(value = "/challenge/create/challenge-creator/{challengeCreatorId}", method = RequestMethod.POST)
-    public ResponseEntity createChallenge(@RequestBody ChallengeModel challengeModel, @PathVariable Long challengeCreatorId) {
+    public ResponseEntity createChallenge(@RequestBody Challenge challenge, @PathVariable Long challengeCreatorId) {
 
-        if (challengeModel.getTopic().equals("") || challengeModel.getDescription().equals("")) {
+        if (challenge.getTopic().equals("") || challenge.getDescription().equals("")) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
 
-        UserModel challengeCreator = userService.getUserFromDatabase(challengeCreatorId);
-        challengeModel.setChallengeCreator(challengeCreator);
+        User challengeCreator = userService.getUserFromDatabase(challengeCreatorId);
+        challenge.setChallengeCreator(challengeCreator);
 
-        challengeService.saveChallengeToDatabase(challengeModel);
-        createAndSaveNotification(challengeCreator, challengeModel, new NotificationInfo(Action.CREATECHALLENGE));
+        challengeService.saveChallengeToDatabase(challenge);
+        createAndSaveNotification(challengeCreator, challenge, new NotificationInfo(Action.CREATECHALLENGE));
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/challenge/{id}/user/{loggedInUserId}", method = RequestMethod.GET)
-    public ResponseEntity<ChallengeModel> readChallenge(@PathVariable Long id, @PathVariable Long loggedInUserId) {
+    public ResponseEntity<Challenge> readChallenge(@PathVariable Long id, @PathVariable Long loggedInUserId) {
 
-        ChallengeModel challenge = challengeService.getChallengeFromDatabase(id);
-        UserModel userModelFromDatabase = userService.getUserFromDatabase(loggedInUserId);
+        Challenge challenge = challengeService.getChallengeFromDatabase(id);
+        User userFromDatabase = userService.getUserFromDatabase(loggedInUserId);
 
-        return validateUserRestrictions(challenge, userModelFromDatabase);
+        return validateUserRestrictions(challenge, userFromDatabase);
     }
 
-    private ResponseEntity<ChallengeModel> validateUserRestrictions(ChallengeModel challenge, UserModel userModelFromDatabase) {
+    private ResponseEntity<Challenge> validateUserRestrictions(Challenge challenge, User userFromDatabase) {
 
-        if (isChallengeUnavailableForUserNotSignedIn(challenge, userModelFromDatabase)) {
+        if (isChallengeUnavailableForUserNotSignedIn(challenge, userFromDatabase)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        if (userModelFromDatabase == null && challenge.getChallengeCompleted()) {
+        if (userFromDatabase == null && challenge.getChallengeCompleted()) {
             return new ResponseEntity<>(challenge, HttpStatus.OK);
         }
 
         if(challenge.getChallengeClaimed()) {
-            if (isLoggedInUserTheCreatorAndIsVideoUploaded(challenge, userModelFromDatabase)) {
+            if (isLoggedInUserTheCreatorAndIsVideoUploaded(challenge, userFromDatabase)) {
                 return new ResponseEntity<>(challenge, HttpStatus.OK);
             }
-            if (isLoggedInUserNotClaimerAndChallengeNotCompleted(challenge, userModelFromDatabase)) {
+            if (isLoggedInUserNotClaimerAndChallengeNotCompleted(challenge, userFromDatabase)) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
 
@@ -80,20 +80,20 @@ public class ChallengeController {
 
     }
 
-    private boolean isLoggedInUserNotClaimerAndChallengeNotCompleted(ChallengeModel challenge, UserModel userModelFromDatabase) {
-        if (!userModelFromDatabase.getId().equals(challenge.getChallengeClaimer().getId()) && !challenge.getChallengeCompleted()) {
+    private boolean isLoggedInUserNotClaimerAndChallengeNotCompleted(Challenge challenge, User userFromDatabase) {
+        if (!userFromDatabase.getId().equals(challenge.getChallengeClaimer().getId()) && !challenge.getChallengeCompleted()) {
             System.out.println("felhantering: usermodel finns och är inte claimer");
             return true;
         }
         return false;
     }
 
-    private boolean isLoggedInUserTheCreatorAndIsVideoUploaded(ChallengeModel challenge, UserModel userModelFromDatabase) {
-        return (userModelFromDatabase.getId().equals(challenge.getChallengeCreator().getId())) && challenge.getYoutubeVideoUploaded();
+    private boolean isLoggedInUserTheCreatorAndIsVideoUploaded(Challenge challenge, User userFromDatabase) {
+        return (userFromDatabase.getId().equals(challenge.getChallengeCreator().getId())) && challenge.getYoutubeVideoUploaded();
     }
 
-    private boolean isChallengeUnavailableForUserNotSignedIn(ChallengeModel challenge, UserModel userModelFromDatabase) {
-        if (userModelFromDatabase == null && challenge.getChallengeClaimed() && !challenge.getChallengeCompleted()) {
+    private boolean isChallengeUnavailableForUserNotSignedIn(Challenge challenge, User userFromDatabase) {
+        if (userFromDatabase == null && challenge.getChallengeClaimed() && !challenge.getChallengeCompleted()) {
             System.out.println("felhantering: usermodel null");
             return true;
         }
@@ -103,60 +103,60 @@ public class ChallengeController {
 
     @CrossOrigin
     @RequestMapping(value = "/challenges/", method = RequestMethod.GET)
-    public ResponseEntity<List<ChallengeModel>> readAllChallenges() {
+    public ResponseEntity<List<Challenge>> readAllChallenges() {
         return new ResponseEntity<>(challengeService.getAllChallengesFromDatabase(), HttpStatus.OK);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/challenges/completed/", method = RequestMethod.GET)
-    public ResponseEntity<List<ChallengeModel>> readAllCompletedChallenges() {
+    public ResponseEntity<List<Challenge>> readAllCompletedChallenges() {
         return new ResponseEntity<>(challengeService.getAllCompletedChallengesFromDatabase(), HttpStatus.OK);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/challenges/unapproved/", method = RequestMethod.GET)
-    public ResponseEntity<List<ChallengeModel>> readAllUnapprovedChallenges() {
+    public ResponseEntity<List<Challenge>> readAllUnapprovedChallenges() {
         return new ResponseEntity<>(challengeService.getAllUnapprovedChallengesFromDatabase(), HttpStatus.OK);
     }
 
 
     @CrossOrigin
     @RequestMapping(value = "/challenge/", method = RequestMethod.PUT)
-    public ResponseEntity<ChallengeModel> updateChallenge(@RequestBody ChallengeModel challengeModel) {
-        challengeService.updateChallengeInDatabase(challengeModel);
-        return new ResponseEntity<>(challengeModel, HttpStatus.OK);
+    public ResponseEntity<Challenge> updateChallenge(@RequestBody Challenge challenge) {
+        challengeService.updateChallengeInDatabase(challenge);
+        return new ResponseEntity<>(challenge, HttpStatus.OK);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/challenge/{id}/update-challenge-claimer/", method = RequestMethod.PUT)
-    public ResponseEntity<ChallengeModel> updateChallengeClaimer(@PathVariable Long id, @RequestBody UserModel userModel) {
-        ChallengeModel challengeModel = challengeService.getChallengeFromDatabase(id);
+    public ResponseEntity<Challenge> updateChallengeClaimer(@PathVariable Long id, @RequestBody User user) {
+        Challenge challenge = challengeService.getChallengeFromDatabase(id);
 
-        if (isChallengeCreatorSameAsChallengeClaimer(userModel, challengeModel)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (isChallengeCreatorSameAsChallengeClaimer(user, challenge)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        challengeModel.setChallengeClaimer(userModel);
-        challengeModel.setChallengeClaimed(true);
-        challengeService.updateChallengeInDatabase(challengeModel);
-        createAndSaveNotification(userModel, challengeModel, new NotificationInfo(Action.CLAIMCHALLENGE));
-        return new ResponseEntity<>(challengeModel, HttpStatus.OK);
+        challenge.setChallengeClaimer(user);
+        challenge.setChallengeClaimed(true);
+        challengeService.updateChallengeInDatabase(challenge);
+        createAndSaveNotification(user, challenge, new NotificationInfo(Action.CLAIMCHALLENGE));
+        return new ResponseEntity<>(challenge, HttpStatus.OK);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/challenge/{id}/add-youtube-url/", method = RequestMethod.PUT)
-    public ResponseEntity<ChallengeModel> addYoutubeUrlToChallenge(@PathVariable Long id, @RequestBody String youtubeUrl) {
-        ChallengeModel challengeModel = challengeService.getChallengeFromDatabase(id);
-        challengeModel.setYoutubeURL(youtubeUrl);
-        challengeModel.setYoutubeUrlProvided(true);
-        challengeService.updateChallengeInDatabase(challengeModel);
-        return new ResponseEntity<>(challengeModel, HttpStatus.OK);
+    public ResponseEntity<Challenge> addYoutubeUrlToChallenge(@PathVariable Long id, @RequestBody String youtubeUrl) {
+        Challenge challenge = challengeService.getChallengeFromDatabase(id);
+        challenge.setYoutubeURL(youtubeUrl);
+        challenge.setYoutubeUrlProvided(true);
+        challengeService.updateChallengeInDatabase(challenge);
+        return new ResponseEntity<>(challenge, HttpStatus.OK);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/challenge/{id}/assign-points-to-user/", method = RequestMethod.PUT)
-    public ResponseEntity<ChallengeModel> assignPointsToUser(@PathVariable Long id) {
-        ChallengeModel challenge = challengeService.getChallengeFromDatabase(id);
-        UserModel challengeCompleter = userService.getUserFromDatabase(challenge.getChallengeClaimer().getId());
-        UserModel challengeCreator = userService.getUserFromDatabase(challenge.getChallengeCreator().getId());
+    public ResponseEntity<Challenge> assignPointsToUser(@PathVariable Long id) {
+        Challenge challenge = challengeService.getChallengeFromDatabase(id);
+        User challengeCompleter = userService.getUserFromDatabase(challenge.getChallengeClaimer().getId());
+        User challengeCreator = userService.getUserFromDatabase(challenge.getChallengeCreator().getId());
 
         Double pointsToDistribute = challenge.getUpvotes();
         System.out.println(pointsToDistribute);
@@ -180,29 +180,29 @@ public class ChallengeController {
 
     @CrossOrigin
     @RequestMapping(value = "/challenge/{id}/disapprove-challenge/", method = RequestMethod.PUT)
-    public ResponseEntity<ChallengeModel> disapproveChallenge(@PathVariable Long id, @RequestBody String notificationMessage) {
-        ChallengeModel challengeModel = challengeService.getChallengeFromDatabase(id);
-        UserModel userThatHasFailedPerformedChallenge = challengeModel.getChallengeClaimer();
+    public ResponseEntity<Challenge> disapproveChallenge(@PathVariable Long id, @RequestBody String notificationMessage) {
+        Challenge challenge = challengeService.getChallengeFromDatabase(id);
+        User userThatHasFailedPerformedChallenge = challenge.getChallengeClaimer();
 
-        challengeModel.setYoutubeURL(null);
-        challengeModel.setChallengeClaimed(false);
-        challengeModel.setChallengeClaimer(null);
-        challengeModel.setYoutubeVideoUploaded(false);
-        challengeModel.setYoutubeUrlProvided(false);
-        challengeModel.setChallengeDisapproved(true);
+        challenge.setYoutubeURL(null);
+        challenge.setChallengeClaimed(false);
+        challenge.setChallengeClaimer(null);
+        challenge.setYoutubeVideoUploaded(false);
+        challenge.setYoutubeUrlProvided(false);
+        challenge.setChallengeDisapproved(true);
 
-        challengeService.updateChallengeInDatabase(challengeModel);
+        challengeService.updateChallengeInDatabase(challenge);
 
         NotificationInfo notificationInfo = new NotificationInfo(Action.FAILEDTOPERFORMECHALLENGE, notificationMessage);
-        createAndSaveNotification(userThatHasFailedPerformedChallenge, challengeModel, notificationInfo);
+        createAndSaveNotification(userThatHasFailedPerformedChallenge, challenge, notificationInfo);
 
-        return new ResponseEntity<>(challengeModel, HttpStatus.OK);
+        return new ResponseEntity<>(challenge, HttpStatus.OK);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/challenge/{id}/confirm-uploaded-youtube-url/", method = RequestMethod.PUT)
-    public ResponseEntity<ChallengeModel> confirmUploadedYoutubeUrl(@PathVariable Long id) {
-        ChallengeModel challenge = challengeService.getChallengeFromDatabase(id);
+    public ResponseEntity<Challenge> confirmUploadedYoutubeUrl(@PathVariable Long id) {
+        Challenge challenge = challengeService.getChallengeFromDatabase(id);
         if (!challenge.getYoutubeVideoUploaded()) {
             challenge.setYoutubeVideoUploaded(true);
             challenge.setYoutubeUrlProvided(false);
@@ -216,9 +216,9 @@ public class ChallengeController {
 
     @CrossOrigin
     @RequestMapping(value = "/challenge/{id}/add-or-remove-user-to-challenge-upvoters/", method = RequestMethod.PUT)
-    public ResponseEntity addOrRemoveUserToChallengeUpvoters(@PathVariable Long id, @RequestBody UserModel loggedInUser) {
-        UserModel user = userService.getUserFromDatabase(loggedInUser.getId());
-        ChallengeModel challenge = challengeService.getChallengeFromDatabase(id);
+    public ResponseEntity addOrRemoveUserToChallengeUpvoters(@PathVariable Long id, @RequestBody User loggedInUser) {
+        User user = userService.getUserFromDatabase(loggedInUser.getId());
+        Challenge challenge = challengeService.getChallengeFromDatabase(id);
 
         if (challenge.getChallengeUpvoters().contains(user.getId())) {
             challenge.removeUserModelFromChallengeUpvoters(user);
@@ -236,9 +236,9 @@ public class ChallengeController {
 
     @CrossOrigin
     @RequestMapping(value = "/challenge/{id}/add-or-remove-point-to-completed-challenge/", method = RequestMethod.PUT)
-    public ResponseEntity addOrRemovePointToCompletedChallenge(@PathVariable Long id, @RequestBody UserModel loggedInUser) {
-        ChallengeModel challenge = challengeService.getChallengeFromDatabase(id);
-        UserModel user = userService.getUserFromDatabase(loggedInUser.getId());
+    public ResponseEntity addOrRemovePointToCompletedChallenge(@PathVariable Long id, @RequestBody User loggedInUser) {
+        Challenge challenge = challengeService.getChallengeFromDatabase(id);
+        User user = userService.getUserFromDatabase(loggedInUser.getId());
 
         if (challenge.getChallengeUpvoters().contains(user.getId())) {
             challenge.removeUserModelFromChallengeUpvoters(user);
@@ -252,24 +252,24 @@ public class ChallengeController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    private boolean isChallengeCreatorSameAsChallengeClaimer(UserModel userModel, ChallengeModel challengeModel) {
-        if (challengeModel.getChallengeCreator() != null && userModel != null) {
-            if (challengeModel.getChallengeCreator().getId().equals(userModel.getId())) {
+    private boolean isChallengeCreatorSameAsChallengeClaimer(User user, Challenge challenge) {
+        if (challenge.getChallengeCreator() != null && user != null) {
+            if (challenge.getChallengeCreator().getId().equals(user.getId())) {
                 return true;
             }
         }
         return false;
     }
 
-    private void updateChallengeToCompleted(ChallengeModel challenge) {
+    private void updateChallengeToCompleted(Challenge challenge) {
         challenge.setChallengeCompleted(true);
         challenge.setYoutubeUrlProvided(false);
         challenge.setYoutubeVideoUploaded(false);
     }
 
-    private void removePointsFromUsers(ChallengeModel challenge) {
-        UserModel challengeCompleter = userService.getUserFromDatabase(challenge.getChallengeClaimer().getId());
-        UserModel challengeCreator = userService.getUserFromDatabase(challenge.getChallengeCreator().getId());
+    private void removePointsFromUsers(Challenge challenge) {
+        User challengeCompleter = userService.getUserFromDatabase(challenge.getChallengeClaimer().getId());
+        User challengeCreator = userService.getUserFromDatabase(challenge.getChallengeCreator().getId());
 
         challenge.removePoints(1.0);
         challengeCompleter.removeCompletedChallengePoint(1.0);
@@ -279,9 +279,9 @@ public class ChallengeController {
         userService.updateUserInDatabase(challengeCreator);
     }
 
-    private void addPointsToUsers(ChallengeModel challenge) {
-        UserModel challengeCompleter = userService.getUserFromDatabase(challenge.getChallengeClaimer().getId());
-        UserModel challengeCreator = userService.getUserFromDatabase(challenge.getChallengeCreator().getId());
+    private void addPointsToUsers(Challenge challenge) {
+        User challengeCompleter = userService.getUserFromDatabase(challenge.getChallengeClaimer().getId());
+        User challengeCreator = userService.getUserFromDatabase(challenge.getChallengeCreator().getId());
 
         challenge.addPoints(1.0);
         challengeCompleter.addCompletedChallengePoints(1.0);
@@ -291,9 +291,9 @@ public class ChallengeController {
         userService.updateUserInDatabase(challengeCreator);
     }
 
-    private void createAndSaveNotification(UserModel user, ChallengeModel challenge, NotificationInfo notificationInfo) {
-        NotificationModel notificationModel = new NotificationModel(user, challenge, notificationInfo);
-        notificationController.createNotification(notificationModel);
+    private void createAndSaveNotification(User user, Challenge challenge, NotificationInfo notificationInfo) {
+        Notification notification = new Notification(user, challenge, notificationInfo);
+        notificationController.createNotification(notification);
     }
 
 }

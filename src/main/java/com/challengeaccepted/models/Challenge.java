@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "challenges")
-public class ChallengeModel implements Serializable {
+public class Challenge implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,15 +29,15 @@ public class ChallengeModel implements Serializable {
     private Boolean isChallengeDisapproved;
     @ManyToMany
     @JoinColumn(name = "challenge_upvoters_id")
-    private List<UserModel> challengeUpvoters;
+    private List<User> challengeUpvoters;
     @OneToOne
     @JoinColumn(name = "challenge_claimer_id")
-    private UserModel challengeClaimer;
+    private User challengeClaimer;
     @OneToOne
     @JoinColumn(name = "challenge_creator_id")
-    private UserModel challengeCreator;
+    private User challengeCreator;
 
-    public ChallengeModel() {
+    public Challenge() {
     }
 
     public Long getId() {
@@ -60,23 +60,12 @@ public class ChallengeModel implements Serializable {
         this.description = description;
     }
 
-    public String getYoutubeURL() {
-        return youtubeURL;
-    }
-
     public void setYoutubeURL(String youtubeURL) {
         this.youtubeURL = youtubeURL;
     }
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
 
     public Double getUpvotes() {
         return upvotes;
@@ -116,27 +105,27 @@ public class ChallengeModel implements Serializable {
         this.upvotes -= upvotes;
     }
 
-    public void addUserModelToChallengeUpvoters(UserModel userModel) {
+    public void addUserModelToChallengeUpvoters(User user) {
         if (challengeUpvoters == null) {
-            challengeUpvoters = new ArrayList<UserModel>();
+            challengeUpvoters = new ArrayList<User>();
         }
-        challengeUpvoters.add(userModel);
+        challengeUpvoters.add(user);
     }
 
     public List<Long> getChallengeUpvoters() {
         List<Long> listOfChallengeUpvotersId = new ArrayList<Long>();
-        for (UserModel user : challengeUpvoters) {
+        for (User user : challengeUpvoters) {
             listOfChallengeUpvotersId.add(user.getId());
         }
         return listOfChallengeUpvotersId;
     }
 
-    public void setChallengeUpvoters(List<UserModel> challengeUpvoters) {
+    public void setChallengeUpvoters(List<User> challengeUpvoters) {
         this.challengeUpvoters = challengeUpvoters;
     }
 
-    public void removeUserModelFromChallengeUpvoters(UserModel userModel) {
-        challengeUpvoters.remove(userModel);
+    public void removeUserModelFromChallengeUpvoters(User user) {
+        challengeUpvoters.remove(user);
     }
 
     public Boolean getChallengeClaimed() {
@@ -179,19 +168,19 @@ public class ChallengeModel implements Serializable {
         isChallengeDisapproved = challengeDisapproved;
     }
 
-    public UserModel getChallengeClaimer() {
+    public User getChallengeClaimer() {
         return challengeClaimer;
     }
 
-    public void setChallengeClaimer(UserModel challengeClaimer) {
+    public void setChallengeClaimer(User challengeClaimer) {
         this.challengeClaimer = challengeClaimer;
     }
 
-    public UserModel getChallengeCreator() {
+    public User getChallengeCreator() {
         return challengeCreator;
     }
 
-    public void setChallengeCreator(UserModel challengeCreator) {
+    public void setChallengeCreator(User challengeCreator) {
         this.challengeCreator = challengeCreator;
     }
 
