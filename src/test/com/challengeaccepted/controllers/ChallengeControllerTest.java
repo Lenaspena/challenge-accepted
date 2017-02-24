@@ -52,15 +52,15 @@ public class ChallengeControllerTest {
     public void testCreateChallenge() throws Exception {
         when(mockedChallenge.getTopic()).thenReturn("");
         when(mockedChallenge.getDescription()).thenReturn("");
-        assertEquals("createChallenge() did not respond with http status 204 (no content)", HttpStatus.NO_CONTENT, challengeController.createChallenge(mockedChallenge, new Random().nextLong()).getStatusCode());
+        assertEquals(HttpStatus.NO_CONTENT, challengeController.createChallenge(mockedChallenge, new Random().nextLong()).getStatusCode());
         when(mockedChallenge.getTopic()).thenReturn("Topic");
         when(mockedChallenge.getDescription()).thenReturn("Description");
-        assertEquals("createChallenge() did not respond with http status 201 (created)", HttpStatus.CREATED, challengeController.createChallenge(mockedChallenge, new Random().nextLong()).getStatusCode());
+        assertEquals(HttpStatus.CREATED, challengeController.createChallenge(mockedChallenge, new Random().nextLong()).getStatusCode());
     }
 
     @Test
     public void testReadChallenge_Should_Return_Status_Code_200() throws Exception {
-        assertEquals("readChallenge() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.readChallenge(1L, mockedUser.getId()).getStatusCode());
+        assertEquals(HttpStatus.OK, challengeController.readChallenge(1L, mockedUser.getId()).getStatusCode());
         when(mockedChallenge.getChallengeClaimed()).thenReturn(true);
     }
 
@@ -71,66 +71,66 @@ public class ChallengeControllerTest {
         when(mockedChallenge.getChallengeCompleted()).thenReturn(false);
         when(mockedChallenge.getYoutubeVideoUploaded()).thenReturn(false);
         when(mockedChallenge.getChallengeClaimed()).thenReturn(true);
-        assertEquals("readChallenge() did not respond with http status 400 (bad request)", HttpStatus.BAD_REQUEST, challengeController.readChallenge(1L, mockedUser.getId()).getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, challengeController.readChallenge(1L, mockedUser.getId()).getStatusCode());
     }
 
     @Test
     public void testReadAllChallenges_Should_Return_Status_Code_200() throws Exception {
-        assertEquals("readAllChallenges() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.readAllChallenges().getStatusCode());
+        assertEquals(HttpStatus.OK, challengeController.readAllChallenges().getStatusCode());
     }
 
     @Test
     public void testReadAllCompletedChallenges_Should_Return_Status_Code_200() throws Exception {
-        assertEquals("readAllCompletedChallenges() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.readAllCompletedChallenges().getStatusCode());
+        assertEquals(HttpStatus.OK, challengeController.readAllCompletedChallenges().getStatusCode());
     }
 
     @Test
     public void testReadAllUnapprovedChallenges_Should_Return_Status_Code_200() throws Exception {
-        assertEquals("readAllUnapprovedChallenges() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.readAllUnapprovedChallenges().getStatusCode());
+        assertEquals(HttpStatus.OK, challengeController.readAllUnapprovedChallenges().getStatusCode());
     }
 
     @Test
     public void testUpdateChallenge_Should_Return_Status_Code_200() throws Exception {
-        assertEquals("updateChallenge() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.updateChallenge(new Challenge()).getStatusCode());
+        assertEquals(HttpStatus.OK, challengeController.updateChallenge(new Challenge()).getStatusCode());
     }
 
     @Test
     public void testUpdateChallengeClaimer() throws Exception {
         when(mockedUser.getId()).thenReturn(1L);
-        assertEquals("updateChallengeClaimer() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.updateChallengeClaimer(1L, mockedUser).getStatusCode());
+        assertEquals(HttpStatus.OK, challengeController.updateChallengeClaimer(1L, mockedUser).getStatusCode());
         // Set the two mocked users to the same id, should return a bad request http status.
         when(mockedChallenge.getChallengeCreator().getId()).thenReturn(1L);
-        assertEquals("updateChallengeClaimer() did not respond with http status 400 (bad request)", HttpStatus.BAD_REQUEST, challengeController.updateChallengeClaimer(1L, mockedUser).getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, challengeController.updateChallengeClaimer(1L, mockedUser).getStatusCode());
     }
 
     @Test
     public void testAddYoutubeUrlToChallenge_Should_Return_Status_Code_200() throws Exception {
-        assertEquals("addYoutubeUrlToChallenge() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.addYoutubeUrlToChallenge(1L, "YouTubeURL").getStatusCode());
+        assertEquals(HttpStatus.OK, challengeController.addYoutubeUrlToChallenge(1L, "YouTubeURL").getStatusCode());
     }
 
     @Test
     public void testAssignPointsToUser_Should_Return_Status_Code_200() throws Exception {
         when(mockedUserService.getUserFromDatabase(mockedChallenge.getChallengeCreator().getId())).thenReturn(mockedUser);
-        assertEquals("assignPoinstToUser() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.assignPointsToUser(1L).getStatusCode());
+        assertEquals(HttpStatus.OK, challengeController.assignPointsToUser(1L).getStatusCode());
     }
 
     @Test
     public void testDisapproveChallenge_Should_Return_Status_Code_200() throws Exception {
-        assertEquals("disapproveChallenge() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.disapproveChallenge(1L, null).getStatusCode());
+        assertEquals(HttpStatus.OK, challengeController.disapproveChallenge(1L).getStatusCode());
     }
 
     @Test
     public void testConfirmUploadedYoutubeUrl() throws Exception {
-        assertEquals("confirmUploadedYoutubeUrl() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.confirmUploadedYoutubeUrl(1L).getStatusCode());
+        assertEquals(HttpStatus.OK, challengeController.confirmUploadedYoutubeUrl(1L).getStatusCode());
         when(mockedChallenge.getYoutubeVideoUploaded()).thenReturn(true);
-        assertEquals("confirmUploadedYoutubeUrl() did not respond with http status 400 (bad request)", HttpStatus.BAD_REQUEST, challengeController.confirmUploadedYoutubeUrl(1L).getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, challengeController.confirmUploadedYoutubeUrl(1L).getStatusCode());
     }
 
     @Test
     public void testAddOrRemovePointToCompletedChallenge_Should_Return_Status_Code_200() throws Exception {
         when(mockedUserService.getUserFromDatabase(mockedUser.getId())).thenReturn(mockedUser);
         when(mockedChallengeService.getChallengeFromDatabase(1L)).thenReturn(mockedChallenge);
-        assertEquals("addOrRemovePointToCompletedChallenge() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.addOrRemoveUserToChallengeUpvoters(1L, mockedUser).getStatusCode());
+        assertEquals(HttpStatus.OK, challengeController.addOrRemoveUserToChallengeUpvoters(1L, mockedUser).getStatusCode());
     }
 
     @Test()
@@ -138,7 +138,7 @@ public class ChallengeControllerTest {
         when(mockedUser.getId()).thenReturn(1L);
         when(mockedUserService.getUserFromDatabase(1L)).thenReturn(new User());
         /*assertEquals("addUserToChallengeUpvoters() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.addOrRemoveUserToChallengeUpvoters(1L, mockedUser).getStatusCode());*/
-        assertEquals("addUserToChallengeUpvoters() did not respond with http status 200 (ok)", HttpStatus.OK, challengeController.addOrRemovePointToCompletedChallenge(1L, mockedUser).getStatusCode());
+        assertEquals(HttpStatus.OK, challengeController.addOrRemovePointToCompletedChallenge(1L, mockedUser).getStatusCode());
     }
 
 }

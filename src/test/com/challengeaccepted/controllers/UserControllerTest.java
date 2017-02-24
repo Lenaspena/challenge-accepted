@@ -24,11 +24,13 @@ public class UserControllerTest {
     public void before() throws Exception {
         userService = mock(UserService.class);
         unitUnderTest = new UserRestController(userService);
-        user = setUser();
+        user = mock(User.class);
     }
 
     @Test
     public void createUser_ShouldReturn201() throws Exception {
+        when(user.getId()).thenReturn(1L);
+
         ResponseEntity<User> responseEntity = unitUnderTest.createUser(user);
         HttpStatus status = responseEntity.getStatusCode();
 
@@ -48,6 +50,7 @@ public class UserControllerTest {
     @Test
     public void readUser_ShouldReturn200() {
         when(userService.getUserFromDatabase(1L)).thenReturn(user);
+        when(user.getId()).thenReturn(1L);
 
         ResponseEntity<User> responseEntity = unitUnderTest.readUser(user.getId());
         HttpStatus status = responseEntity.getStatusCode();
@@ -64,15 +67,6 @@ public class UserControllerTest {
     @Test
     public void testReadUserByEmail_Should_Return_Status_Code_200() throws Exception {
         assertEquals(HttpStatus.OK, unitUnderTest.readUserByEmail("david@hasselhoff.se").getStatusCode());
-    }
-
-    private User setUser() {
-        user = new User();
-        user.setId(1L);
-        user.setFirstName("Lena");
-        user.setLastName("Stridsberg");
-        user.setEmail("lena.stridsberg@gmail.com");
-        return user;
     }
 
 }
