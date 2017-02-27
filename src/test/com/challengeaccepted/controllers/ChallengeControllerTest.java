@@ -9,8 +9,9 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -58,10 +59,14 @@ public class ChallengeControllerTest {
     }
 
     @Test
-    public void readChallenge_ShouldReturn200() throws Exception {
-        assertEquals(HttpStatus.OK, unitUnderTest.readChallenge(1L, user.getId()).getStatusCode());
+    public void readChallenge_Success() throws Exception {
+        when(challengeService.getChallengeFromDatabase(challenge.getId())).thenReturn(challenge);
+        when(userService.getUserFromDatabase(user.getId())).thenReturn(user);
 
-        when(challenge.getChallengeClaimed()).thenReturn(true);
+        ResponseEntity<Challenge> responseEntity = unitUnderTest.readChallenge(challenge.getId(), user.getId());
+        HttpStatus status = responseEntity.getStatusCode();
+
+        assertEquals(HttpStatus.OK, status);
     }
 
     @Test
@@ -76,8 +81,19 @@ public class ChallengeControllerTest {
     }
 
     @Test
-    public void readAllChallenges_ShouldReturn200() throws Exception {
-        assertEquals(HttpStatus.OK, unitUnderTest.readAllChallenges().getStatusCode());
+    public void readAllChallenges_Success() throws Exception {
+        when(challengeService.getAllChallengesFromDatabase()).thenReturn(listOfChallenges());
+
+        ResponseEntity<List<Challenge>> responseEntity = unitUnderTest.readAllChallenges();
+        HttpStatus status = responseEntity.getStatusCode();
+
+        assertEquals(HttpStatus.OK, status);
+    }
+
+    private List<Challenge> listOfChallenges() {
+        List<Challenge> listOfChallenges = new ArrayList<>();
+        listOfChallenges.add(challenge);
+        return listOfChallenges;
     }
 
     @Test

@@ -67,7 +67,6 @@ public class ChallengeRestController {
             if (isLoggedInUserNotClaimerAndChallengeNotCompleted(challenge, userFromDatabase)) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-
         }
 
         return new ResponseEntity<>(challenge, HttpStatus.OK);
@@ -75,10 +74,7 @@ public class ChallengeRestController {
     }
 
     private boolean isLoggedInUserNotClaimerAndChallengeNotCompleted(Challenge challenge, User userFromDatabase) {
-        if (!userFromDatabase.getId().equals(challenge.getChallengeClaimer().getId()) && !challenge.getChallengeCompleted()) {
-            return true;
-        }
-        return false;
+        return !userFromDatabase.getId().equals(challenge.getChallengeClaimer().getId()) && !challenge.getChallengeCompleted();
     }
 
     private boolean isLoggedInUserTheCreatorAndIsVideoUploaded(Challenge challenge, User userFromDatabase) {
@@ -86,10 +82,7 @@ public class ChallengeRestController {
     }
 
     private boolean isChallengeUnavailableForUserNotSignedIn(Challenge challenge, User userFromDatabase) {
-        if (userFromDatabase == null && challenge.getChallengeClaimed() && !challenge.getChallengeCompleted()) {
-            return true;
-        }
-        return false;
+        return userFromDatabase == null && challenge.getChallengeClaimed() && !challenge.getChallengeCompleted();
     }
 
 
@@ -169,7 +162,6 @@ public class ChallengeRestController {
     @RequestMapping(value = "/challenge/{id}/disapprove-challenge/", method = RequestMethod.PUT)
     public ResponseEntity<Challenge> disapproveChallenge(@PathVariable Long id) {
         Challenge challenge = challengeService.getChallengeFromDatabase(id);
-        User userThatHasFailedPerformedChallenge = challenge.getChallengeClaimer();
 
         challenge.setYoutubeURL(null);
         challenge.setChallengeClaimed(false);
