@@ -1,6 +1,6 @@
 package com.challengeaccepted.loggers;
 
-import com.challengeaccepted.controllers.ChallengeController;
+import com.challengeaccepted.controllers.ChallengeRestController;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -10,7 +10,7 @@ import java.util.logging.SimpleFormatter;
 
 public class LoggerChallengeController {
 
-    private static final Logger LOG = Logger.getLogger(ChallengeController.class.getName());
+    private static final Logger LOG = Logger.getLogger(ChallengeRestController.class.getName());
     private FileHandler handler;
 
     public LoggerChallengeController() {

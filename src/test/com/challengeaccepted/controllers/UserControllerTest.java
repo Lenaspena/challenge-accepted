@@ -57,12 +57,11 @@ public class UserControllerTest {
 
     @Test
     public void readAllUsers_ShouldReturn200() throws Exception {
-
         assertEquals(HttpStatus.OK, unitUnderTest.readAllUsers().getStatusCode());
     }
 
     @Test
-    public void testReadUserByEmail_Should_Return_Status_Code_200() throws Exception {
+    public void testReadUserByEmail_ShouldReturn200() throws Exception {
         assertEquals(HttpStatus.OK, unitUnderTest.readUserByEmail("david@hasselhoff.se").getStatusCode());
     }
 

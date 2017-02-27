@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class ChallengeController {
+public class ChallengeRestController {
 
     private final ChallengeService challengeService;
     private final UserService userService;
 
     @Autowired
-    public ChallengeController(ChallengeService challengeService, UserService userService) {
+    public ChallengeRestController(ChallengeService challengeService, UserService userService) {
         this.challengeService = challengeService;
         this.userService = userService;
     }
@@ -28,16 +28,16 @@ public class ChallengeController {
     @RequestMapping(value = "/challenge/create/challenge-creator/{challengeCreatorId}", method = RequestMethod.POST)
     public ResponseEntity createChallenge(@RequestBody Challenge challenge, @PathVariable Long challengeCreatorId) {
 
-        if (challenge.getTopic().equals("") || challenge.getDescription().equals("")) {
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        if(challenge.getTopic() != null || challenge.getDescription() != null) {
+            if (!challenge.getTopic().isEmpty() || !challenge.getDescription().isEmpty()) {
+                User challengeCreator = userService.getUserFromDatabase(challengeCreatorId);
+                challenge.setChallengeCreator(challengeCreator);
+
+                challengeService.saveChallengeToDatabase(challenge);
+                return new ResponseEntity(HttpStatus.CREATED);
+            }
         }
-
-        User challengeCreator = userService.getUserFromDatabase(challengeCreatorId);
-        challenge.setChallengeCreator(challengeCreator);
-
-        challengeService.saveChallengeToDatabase(challenge);
-
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @CrossOrigin
@@ -76,7 +76,6 @@ public class ChallengeController {
 
     private boolean isLoggedInUserNotClaimerAndChallengeNotCompleted(Challenge challenge, User userFromDatabase) {
         if (!userFromDatabase.getId().equals(challenge.getChallengeClaimer().getId()) && !challenge.getChallengeCompleted()) {
-            System.out.println("felhantering: usermodel finns och är inte claimer");
             return true;
         }
         return false;
@@ -88,7 +87,6 @@ public class ChallengeController {
 
     private boolean isChallengeUnavailableForUserNotSignedIn(Challenge challenge, User userFromDatabase) {
         if (userFromDatabase == null && challenge.getChallengeClaimed() && !challenge.getChallengeCompleted()) {
-            System.out.println("felhantering: usermodel null");
             return true;
         }
         return false;
@@ -152,7 +150,6 @@ public class ChallengeController {
         User challengeCreator = userService.getUserFromDatabase(challenge.getChallengeCreator().getId());
 
         Double pointsToDistribute = challenge.getUpvotes();
-        System.out.println(pointsToDistribute);
 
         challengeCreator.addCreatedChallengePoints(pointsToDistribute / 2);
         challengeCompleter.addCompletedChallengePoints(pointsToDistribute);

@@ -1,6 +1,5 @@
 package com.challengeaccepted.loggers;
 
-import com.challengeaccepted.controllers.ChallengeController;
 import com.challengeaccepted.services.UserService;
 
 import java.io.IOException;
